@@ -1,0 +1,40 @@
+name: Daily Workflow
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 10 * * *'
+
+jobs:
+  daily:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+#- name: Generate tomorrow's job
+#run: |
+#python3 generate_tomorrows_job.py
+
+      - name: Get all messages
+        env:
+          API_TOKEN: ${{ secrets.API_TOKEN }}
+        run: |
+          python3 recv_messages.py
+
+      - name: Commit
+        run: |
+          git config --global user.email "samplr@users.noreply.github.com"
+          git config --global user.name "samplr"
+          git add .
+          git commit -am "Auto daily Update"
+          git push
