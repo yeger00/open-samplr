@@ -35,5 +35,5 @@ jobs:
           git config --global user.email "samplr@users.noreply.github.com"
           git config --global user.name "samplr"
           git add .
-          git commit -am "Auto daily Update"
+          git commit --allow-empty -m "Auto daily Update"
           git push
